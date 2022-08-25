@@ -1,0 +1,137 @@
+{
+  "sections": {
+    "image_banner": {
+      "type": "image-banner",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Image banner",
+            "heading_size": "h0"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "Give customers details about the banner image(s) or content on the template.",
+            "text_style": "body"
+          }
+        },
+        "button": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "Shop all",
+            "button_link_1": "shopify:\/\/collections\/all",
+            "button_style_secondary_1": true,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text",
+        "button"
+      ],
+      "settings": {
+        "image": "{{ shop.brand.cover_image }}",
+        "image_overlay_opacity": 40,
+        "image_height": "large",
+        "adapt_height_first_image": false,
+        "desktop_content_position": "bottom-center",
+        "show_text_box": false,
+        "desktop_content_alignment": "center",
+        "color_scheme": "background-1",
+        "mobile_content_alignment": "center",
+        "stack_images_on_mobile": false,
+        "show_text_below": false
+      }
+    },
+    "rich_text": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "<p>Talk about your brand<\/p>",
+            "heading_size": "h1"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "background-1",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 0
+      }
+    },
+    "16612548325e18ba5d": {
+      "type": "custom-carousel",
+      "blocks": {
+        "1661254832e5406179-0": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/smiling-man-holds-cup-of-tea.jpg",
+            "link": ""
+          }
+        },
+        "1661254832e5406179-1": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/flatlay-of-jade-face-roller-laying-on-a-grey-stone.jpg",
+            "link": ""
+          }
+        },
+        "96d2d138-ef24-46f5-9d8e-ac0f6390476a": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/com_december_2017.jpg",
+            "link": ""
+          }
+        },
+        "cf935234-531f-46bb-8fdd-fcea6a0dc699": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/self-serve-coffee-shop.jpg",
+            "link": ""
+          }
+        },
+        "70151f30-5108-4a45-a231-85ef8a5da6c7": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Corona_Cigar_5.jpg",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "1661254832e5406179-0",
+        "1661254832e5406179-1",
+        "96d2d138-ef24-46f5-9d8e-ac0f6390476a",
+        "cf935234-531f-46bb-8fdd-fcea6a0dc699",
+        "70151f30-5108-4a45-a231-85ef8a5da6c7"
+      ],
+      "settings": {
+        "accessibility_info": "Slideshow about our brand"
+      }
+    }
+  },
+  "order": [
+    "image_banner",
+    "rich_text",
+    "16612548325e18ba5d"
+  ]
+}

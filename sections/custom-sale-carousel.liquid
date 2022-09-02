@@ -1,0 +1,297 @@
+{{ 'slick.css' | asset_url | stylesheet_tag }}
+{{ 'slick-theme.css' | asset_url | stylesheet_tag }}
+{%- style -%}
+.slick-track{
+    display: flex !important;
+}
+
+.slick-slider{
+  z-index:0;
+}
+
+.custom-sale-carousel-holder .slick-slide{
+    padding-bottom: 0;
+}
+
+.slick-list{
+    z-index: -1;
+}
+
+.slick-prev{
+    left: 20px;
+    width: 30px;
+    height: 30px;
+}
+
+.slick-next {
+  right: 20px;
+  width: 30px;
+  height: 30px;
+}
+
+.slick-prev::before, .slick-next::before{
+    font-size: 30px;
+    opacity: 1;
+    color: #ff0101;
+}
+
+.custom-sale-carousel-holder{
+  margin: 0 10px;
+}
+
+.custom-sale-carousel-holder>.card-wrapper{
+  padding: 0 10px;
+  max-width: 25%;
+}
+
+.custom-sale-carousel-holder>.card-wrapper>a{
+  text-decoration:none;
+}
+
+.custom-card-header>h3{
+  text-align: center;
+  text-decoration: none;
+  color: #000;
+  font-size:16px;
+  font-weight: 600;
+  margin: 5px;
+}
+
+.custom-card-old-price-item{
+  text-decoration: line-through;
+  font-size: 1.6rem;
+  letter-spacing: 0.1rem;
+  color: rgb(var(--color-foreground));
+}
+
+.custom-card-price{
+  display: flex;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.card-image-holder{
+  max-height: 300px;
+  margin: 0 auto; 
+}
+
+.custom-card-image {
+  max-width: 100%;
+  max-height: 300px;
+}
+
+.custom-sale-card{
+  margin: 10px;
+  padding: 10px 0;
+  border-radius: 10px;
+  background-color: #f9f6f6;
+  display: flex;
+  flex-direction: column;
+}
+
+{%- endstyle -%}
+<div 
+    class="custom-sale-carousel-holder"
+    id="customSaleSlider-{{ section.id }}"
+>
+</div>
+
+<script src="{{ 'jquery-3.6.0.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'slick.min.js' | asset_url }}" defer="defer"></script>
+<script>
+
+let productsArray = [];
+let cursor = null;
+let productCounter = 0;
+const carousel = document.getElementById('customSaleSlider-{{ section.id }}');
+
+function createElement() {
+  console.log(productsArray)
+  productsArray.forEach(el => {
+    let newCard = document.createElement('div');
+    newCard.classList.add('card-wrapper');
+
+    let htmlItem = `
+    <a href="/products/${el.handle}">
+      <div class="custom-sale-card">
+        <div class="card-image-holder">
+          <img class="custom-card-image" src=${el.images.edges[0].node.src}>
+        </div>
+        <div class="card-content">
+          <div class="custom-card-header">
+            <h3 class="card__heading h5">${el.title}</h3>
+          </div>
+          <div class="card-information">
+            <div class="price__container">
+              <div class="custom-card-price">
+                <span class="custom-card-old-price-item">${el.variants.edges[0].node.compareAtPrice}$</span>
+                <span class="custom-card-price-item">${el.variants.edges[0].node.price}$</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+    `
+    newCard.innerHTML = htmlItem;
+    carousel.appendChild(newCard);
+  });
+  initSlick();
+}
+
+function initSlick() {
+  console.log($('#customSaleSlider-{{ section.id }}'))
+  $('#customSaleSlider-{{ section.id }}').slick({
+    autoplay: false,
+    autoplaySpeed: 10000,
+    dots: false,
+    infinite: true,
+    arrows: true,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    responsive: [
+      {
+        breakpoint: 800,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 450,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      }
+    ]
+  });
+}
+
+function storeFrontApiCall(cursor) {
+
+    let queryCursor = `query{
+        products(first: 250, after: ${cursor}) {
+          edges{
+              node{
+                  id
+                  title
+                  handle
+                  images(first: 1) {
+                      edges{
+                          node{
+                              altText
+                              id
+                              src
+                          }
+                      }
+                  }
+                  variants (first: 1){
+                    edges{
+                      node{
+                        price
+                        compareAtPrice
+                      }
+                    }
+                  }
+              }
+              cursor
+          }
+          pageInfo{
+              hasNextPage
+          }
+        }
+    }
+    `;
+    
+	return fetch('/api/graphql.json', 
+    	{ method: 'POST', 
+          headers: { 'Content-Type': 'application/graphql', 
+                     "Access-Control-Origin": "*", 
+                     'X-Shopify-Storefront-Access-Token': "2cee5bc2882b72588c95a8d75eee1aa6" 
+                   },
+          "body": queryCursor })
+          .then(response => response.json()).then(response => { 
+
+            if (response.data.products.edges.length>0) {
+                response.data.products.edges.slice().reverse().forEach(el=>{
+                    if (el.node.variants.edges[0].node.compareAtPrice && el.node.variants.edges[0].node.compareAtPrice > el.node.variants.edges[0].node.price && productCounter < 16) {
+                      productCounter++;
+                      productsArray.push(el.node);
+                    }
+                    cursor = `"${el.cursor}"`
+                })
+            }
+
+            if (response.data.products.pageInfo.hasNextPage && productCounter < 16) {
+                storeFrontApiCall(cursor);
+            } else {
+                console.log("ASDASDASD")
+                createElement();
+            }
+        })
+        .catch(err => {
+            console.log('error');
+            console.log(err);
+        }); 
+    } 
+
+    storeFrontApiCall(cursor);
+
+  
+
+</script>
+
+{% schema %}
+{
+  "name": "Custom sale products",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Custom sliders header"
+    },
+    {
+      "type": "text",
+      "id": "accessibility_info",
+      "label": "Slide header",
+      "info": "Slide header",
+      "default": "Slideshow about our brand"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Custom slide name",
+      "limit": 15,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom slide image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Slide link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom sale products",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

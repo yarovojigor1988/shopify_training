@@ -131,6 +131,7 @@
     "1661417045f6f50ce4": {
       "type": "new-products",
       "settings": {
+        "title": "New products"
       }
     },
     "1661417065fcb0b62c": {
@@ -159,6 +160,30 @@
         "padding_top": 36,
         "padding_bottom": 36
       }
+    },
+    "166195130700912ba1": {
+      "type": "custom-sale-carousel",
+      "blocks": {
+        "1661951307361b5f3a-0": {
+          "type": "slide",
+          "settings": {
+            "link": ""
+          }
+        },
+        "1661951307361b5f3a-1": {
+          "type": "slide",
+          "settings": {
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "1661951307361b5f3a-0",
+        "1661951307361b5f3a-1"
+      ],
+      "settings": {
+        "accessibility_info": "Slideshow about our brand"
+      }
     }
   },
   "order": [
@@ -166,6 +191,7 @@
     "rich_text",
     "16612548325e18ba5d",
     "1661417045f6f50ce4",
-    "1661417065fcb0b62c"
+    "1661417065fcb0b62c",
+    "166195130700912ba1"
   ]
 }

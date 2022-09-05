@@ -107,7 +107,6 @@ let productCounter = 0;
 const carousel = document.getElementById('customSaleSlider-{{ section.id }}');
 
 function createElement() {
-  console.log(productsArray)
   productsArray.forEach(el => {
     let newCard = document.createElement('div');
     newCard.classList.add('card-wrapper');
@@ -141,7 +140,6 @@ function createElement() {
 }
 
 function initSlick() {
-  console.log($('#customSaleSlider-{{ section.id }}'))
   $('#customSaleSlider-{{ section.id }}').slick({
     autoplay: false,
     autoplaySpeed: 10000,
@@ -227,7 +225,6 @@ function storeFrontApiCall(cursor) {
             if (response.data.products.pageInfo.hasNextPage && productCounter < 16) {
                 storeFrontApiCall(cursor);
             } else {
-                console.log("ASDASDASD")
                 createElement();
             }
         })
@@ -239,7 +236,33 @@ function storeFrontApiCall(cursor) {
 
     storeFrontApiCall(cursor);
 
-  
+  function getCustomer() {
+    let customerQuery = `
+    query {
+      customer(customerAccessToken: "2cee5bc2882b72588c95a8d75eee1aa6") {
+        id
+        firstName
+        lastName
+        acceptsMarketing
+        email
+        phone
+      }
+    }`;
+
+    fetch('/api/graphql.json', 
+    	{ method: 'POST', 
+          headers: { 'Content-Type': 'application/graphql', 
+                     "Access-Control-Origin": "*", 
+                     'X-Shopify-Storefront-Access-Token': "2cee5bc2882b72588c95a8d75eee1aa6" 
+                   },
+          "body": customerQuery })
+          .then(response => response.json()).then(response => {
+            console.log(response);
+          })
+
+  }
+
+  getCustomer();
 
 </script>
 

@@ -518,6 +518,36 @@
 
 
     <div class="header__icons">
+
+
+
+      {% assign orders_count = 0 %}
+
+      {%- liquid
+        for order in customer.orders
+          if order.fulfillment_status_label == 'Unfulfilled'
+            assign orders_count = orders_count | plus: 1
+          endif
+        endfor 
+      %}
+
+      <div class="header__icon header__orders">
+
+      {% if customer %}
+        {% if orders_count > 0 %}
+    
+        <div>You have {{ orders_count }} incomplete orders</div>
+
+        {% else %}
+
+        <div>All of your orders were completed</div>
+
+        {%- endif -%}
+      {%- endif -%}
+
+
+      </div>
+
       <details-modal class="header__search">
         <details>
           <summary class="header__icon header__icon--search header__icon--summary link focus-inset modal__toggle" aria-haspopup="dialog" aria-label="{{ 'general.search.search' | t }}">

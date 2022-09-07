@@ -1,0 +1,69 @@
+<style>
+    .welcome-modal{
+        display: none;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        position: fixed;
+        background-color: {{ settings.colors_welcome_bg }};
+        padding: 30px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        color: {{ settings.colors_welcome_text_color }};
+    }
+
+    .welcome-modal-bg-layout{
+        position: fixed;
+        display: none;
+        z-index: 5;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .welcome-modal-open{
+        display:flex;
+    }
+</style>
+
+<div class="welcome-modal-bg-layout"> </div>
+<div class="welcome-modal">
+  {%- if settings.welcome_user_img -%}
+  <div class="welcome-modal-image">
+    <img
+      src="{{ settings.welcome_user_img | image_url: width: 300 }}"
+      loading="lazy"
+      width="300"
+      height="300"
+    >
+  </div>
+  {%- endif -%}
+  <div class="welcome-modal-text">{{ settings.welcome_text_mobile }} {{ customer.first_name }}</div>
+</div>
+
+<script>
+    const customer = `{{ customer }}`;
+    const customerId = `{{ customer.id }}`;
+
+    const params = new URLSearchParams(window.location.search); 
+    const prevUrlStr = document.referrer.replace(document.location.origin, "")
+    if (window.innerWidth <= 500 && prevUrlStr === '/account/register' && params.has('new') && customer.length > 0 && localStorage.showedToUser !== customerId) {
+        document.querySelector('.welcome-modal')?.classList.add('welcome-modal-open');
+        document.querySelector('.welcome-modal-bg-layout')?.classList.add('welcome-modal-open');
+        localStorage.setItem('showedToUser', customerId);
+
+        setTimeout(()=> {
+            document.querySelector('.welcome-modal')?.classList.remove('welcome-modal-open');
+            document.querySelector('.welcome-modal-bg-layout')?.classList.remove('welcome-modal-open');
+        }, 3000)
+    };
+
+    if (window.innerWidth > 500 && prevUrlStr === '/account/register' && params.has('new') && customer.length > 0 && localStorage.showedToUser !== customerId) {
+        document.querySelector('.welcome-new-user')?.classList.add('welcome-new-user-active');
+        localStorage.setItem('showedToUser', customerId);
+    };
+</script>

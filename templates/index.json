@@ -184,6 +184,53 @@
       "settings": {
         "accessibility_info": "Slideshow about our brand"
       }
+    },
+    "1662554655221365cd": {
+      "type": "image-video-carousel",
+      "blocks": {
+        "166255465539047250-0": {
+          "type": "slide",
+          "settings": {
+            "slide_type": "image_slide",
+            "image": "shopify:\/\/shop_images\/Corona_Cigar_5.jpg",
+            "img_slide_text": "qweqwe",
+            "img_slide_link": "shopify:\/\/collections\/cargo-pants",
+            "video_url": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc",
+            "video_slide_text": "Button",
+            "video_slide_link": ""
+          }
+        },
+        "166255465539047250-1": {
+          "type": "slide",
+          "settings": {
+            "slide_type": "image_slide",
+            "image": "shopify:\/\/shop_images\/rack-of-womens-clothing.jpg",
+            "img_slide_text": "xfvxfg",
+            "img_slide_link": "shopify:\/\/products\/new-of-t-shirt-2",
+            "video_url": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc",
+            "video_slide_text": "Button",
+            "video_slide_link": ""
+          }
+        },
+        "02f21fab-52d3-4170-a580-835f649db373": {
+          "type": "slide",
+          "settings": {
+            "slide_type": "video_slide",
+            "img_slide_text": "",
+            "img_slide_link": "",
+            "video_url": "https:\/\/www.youtube.com\/watch?v=_9VUPq3SxOc",
+            "video_slide_text": "Button",
+            "video_slide_link": "shopify:\/\/products\/new-of-t-shirt-2"
+          }
+        }
+      },
+      "block_order": [
+        "166255465539047250-0",
+        "166255465539047250-1",
+        "02f21fab-52d3-4170-a580-835f649db373"
+      ],
+      "settings": {
+      }
     }
   },
   "order": [
@@ -192,6 +239,7 @@
     "16612548325e18ba5d",
     "1661417045f6f50ce4",
     "1661417065fcb0b62c",
-    "166195130700912ba1"
+    "166195130700912ba1",
+    "1662554655221365cd"
   ]
 }

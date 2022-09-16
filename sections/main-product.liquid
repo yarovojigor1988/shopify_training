@@ -423,6 +423,41 @@
                 </div>
 
                 {%- form 'product', product, id: product_form_id, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+
+                  {% if customer and product.price > 50 and template.suffix == 'gift-option' %}
+                  <p class="line-item-property__field custom-gift-checkbox">
+                    <input type="hidden" id="add-gift-hiden" name="properties[Add gift option?]" value="No">
+                    <input id="add-gift-option" type="checkbox" name="properties[Add  gift option?]" value="Yes">
+                    <label for="add-gift-option">Add  gift option?</label>
+                  </p>
+
+                  <p class="some-class-you-decide custom-gift-input custom-gift-message">
+                    <label for="gift-message">Gift message</label>
+                    <input id="gift-message" type="text" name="properties[Gift message]">
+                  </p>
+
+                  <p class="line-item-property__field custom-gift-radio custom-gift-delivery">
+                    <label>Delivery</label><br>
+                    <input type="radio" checked name="properties[Delivery]" value="Paper card"> <span>Paper card</span><br>
+                    <input type="radio" name="properties[Delivery]" value="Email"> <span>Email</span><br>
+                  </p>
+
+                  <p class="some-class-you-decide custom-gift-input custom-gift-email">
+                    <label for="email-to-message">Email</label>
+                    <input id="email-to-message" type="text" name="properties[Email to message]">
+                  </p>
+                {% endif %}
+
+                <div class="gift-product-form__error-message-wrapper" role="alert" hidden>
+                  <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-error" viewBox="0 0 13 13">
+                    <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+                    <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
+                    <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+                    <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
+                  </svg>
+                  <span class="gift-product-form__error-message"></span>
+                </div>
+
                   <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" disabled>
                   <div class="product-form__buttons">
                     <button
@@ -444,7 +479,7 @@
                           </svg>
                         </div>
                     </button>
-                    {%- if block.settings.show_dynamic_checkout -%}
+                    {%- if block.settings.show_dynamic_checkout and template.suffix != 'gift-option' -%}
                       {{ form | payment_button }}
                     {%- endif -%}
                   </div>
@@ -581,6 +616,46 @@
         hiddenInput.value = event.currentTarget.value;
       });
     });
+
+    if (document.getElementById('add-gift-option')) {
+      const giftOption = document.querySelector('#add-gift-option');
+      const giftMessage = document.querySelector('.custom-gift-message');
+      const giftDelivery = document.querySelector('.custom-gift-delivery');
+      const giftEmail = document.querySelector('.custom-gift-email');
+      const giftDeliveryInput = giftDelivery.querySelectorAll('input');
+      const giftMessageInput = giftMessage.querySelector('input');
+      const giftEmailInput = giftEmail.querySelector('input');
+      const addGiftHidden = document.getElementById('add-gift-hiden');
+
+      giftOption.addEventListener('change', ()=>{
+        if (giftOption.checked) {
+          giftMessage.classList.add('custom-option-show');
+          giftDelivery.classList.add('custom-option-show');
+          giftDeliveryInput.forEach(el => {
+            if (el.checked && el.value === 'Email') {
+              giftEmail.classList.add('custom-option-show');
+            }
+          });
+          addGiftHidden.name = "properties[_Add gift option?]";
+        } else {
+          giftMessage.classList.remove('custom-option-show');
+          giftDelivery.classList.remove('custom-option-show');
+          giftEmail.classList.remove('custom-option-show');
+          addGiftHidden.name = "properties[Add gift option?]";
+        }
+      });
+
+      giftDeliveryInput.forEach(el => {        
+        el.addEventListener('change', (event) => {
+          if (event.target.value === 'Email') {
+            giftEmail.classList.add('custom-option-show');
+          } else if (event.target.value === 'Paper card'){
+            giftEmail.classList.remove('custom-option-show');
+            giftEmailInput.value = '';
+          }
+        })
+      })
+    }
   </script>
 
   {%- liquid

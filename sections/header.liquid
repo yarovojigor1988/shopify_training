@@ -444,8 +444,7 @@
         endfor 
       %}
 
-      <div class="header__icon header__orders">
-
+      <div class="  header__orders">
       {%- if customer -%}
         {%- if orders_count > 0 %}
     
@@ -461,8 +460,6 @@
 
         {%- endif -%}
       {%- endif -%}
-
-
       </div>
 
       <details-modal class="header__search">
@@ -574,6 +571,23 @@
         {%- endif -%}
       </a>
     </div>
+    <div class="header__orders-mobile">
+      {%- if customer -%}
+        {%- if orders_count > 0 %}
+    
+        <div>You have {{ orders_count }} incomplete orders</div>
+
+        {%- elsif customer.orders_count == 0 -%}
+        
+        <div></div>
+
+        {%- else -%}
+
+        <div>All of your orders were completed</div>
+
+        {%- endif -%}
+      {%- endif -%}
+      </div>
   </header>
 </{% if section.settings.enable_sticky_header %}sticky-header{% else %}div{% endif %}>
 

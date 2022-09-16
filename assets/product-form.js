@@ -17,6 +17,47 @@ if (!customElements.get('product-form')) {
 
       this.handleErrorMessage();
 
+      if (document.getElementById('add-gift-option')) {
+        const giftOption = document.querySelector('#add-gift-option');
+        const giftMessage = document.querySelector('.custom-gift-message');
+        const giftDelivery = document.querySelector('.custom-gift-delivery');
+        const giftEmail = document.querySelector('.custom-gift-email');
+        const giftDeliveryInput = giftDelivery.querySelectorAll('input');
+        const giftMessageInput = giftMessage.querySelector('input');
+        const giftEmailInput = giftEmail.querySelector('input');
+        const addGiftHidden = document.getElementById('add-gift-hiden');
+        let emailDelivery = false;
+
+        giftDeliveryInput.forEach(el => {
+          if (el.checked && el.value === 'Email') {
+            emailDelivery = true;
+          }})
+
+        if (giftOption.checked) {
+          const patternstr = '^[A-Za-z0-9., \n]{0,50}$';
+          let constraint = new RegExp(patternstr);
+          if(!constraint.test(giftMessageInput.value.trim()) || giftMessageInput.value.trim().length === 0) {
+            this.handleGiftErrorMessage('Please input valid gift message');
+            return
+          } 
+
+          if (emailDelivery) {
+            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            if(!re.test(giftEmailInput.value.trim()) || giftEmailInput.value.trim().length === 0) {
+              this.handleGiftErrorMessage('Please input valid email');
+              return
+            }  
+          }
+          
+        } else {
+          giftMessageInput.name = 'properties[_Gift message]';
+          giftDeliveryInput.forEach(el => {
+            el.name = 'properties[_Delivery]';
+          });
+          giftEmailInput.name = 'properties[_Email to message]';
+        }
+      }
+
       this.submitButton.setAttribute('aria-disabled', true);
       this.submitButton.classList.add('loading');
       this.querySelector('.loading-overlay__spinner').classList.remove('hidden');
@@ -70,6 +111,22 @@ if (!customElements.get('product-form')) {
           if (this.cart && this.cart.classList.contains('is-empty')) this.cart.classList.remove('is-empty');
           if (!this.error) this.submitButton.removeAttribute('aria-disabled');
           this.querySelector('.loading-overlay__spinner').classList.add('hidden');
+
+          if (document.getElementById('add-gift-option')) {
+            const giftMessage = document.querySelector('.custom-gift-message');
+            const giftDelivery = document.querySelector('.custom-gift-delivery');
+            const giftEmail = document.querySelector('.custom-gift-email');
+            const giftDeliveryInput = giftDelivery.querySelectorAll('input');
+            const giftMessageInput = giftMessage.querySelector('input');
+            const giftEmailInput = giftEmail.querySelector('input');
+
+            giftMessageInput.name = 'properties[Gift message]';
+            giftDeliveryInput.forEach(el => {
+              el.name = 'properties[Delivery]';
+            });
+            giftEmailInput.name = 'properties[Email to message]';
+          }
+
         });
     }
 
@@ -82,6 +139,18 @@ if (!customElements.get('product-form')) {
 
       if (errorMessage) {
         this.errorMessage.textContent = errorMessage;
+      }
+    }
+
+    handleGiftErrorMessage(errorMessage = false) {
+      this.errorMessageWrapper2 = this.querySelector('.gift-product-form__error-message-wrapper');
+      if (!this.errorMessageWrapper2) return;
+      this.errorMessage2 = this.errorMessageWrapper2.querySelector('.gift-product-form__error-message');
+
+      this.errorMessageWrapper2.toggleAttribute('hidden', !errorMessage);
+
+      if (errorMessage) {
+        this.errorMessage2.textContent = errorMessage;
       }
     }
   });

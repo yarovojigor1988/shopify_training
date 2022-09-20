@@ -231,6 +231,30 @@
       ],
       "settings": {
       }
+    },
+    "16633197192e1d5525": {
+      "type": "custom-recommended-products",
+      "blocks": {
+        "16633197192ce8cf8d-0": {
+          "type": "slide",
+          "settings": {
+            "product": "another-new-of-t-shirt"
+          }
+        },
+        "16633197192ce8cf8d-1": {
+          "type": "slide",
+          "settings": {
+            "product": "gift-product"
+          }
+        }
+      },
+      "block_order": [
+        "16633197192ce8cf8d-0",
+        "16633197192ce8cf8d-1"
+      ],
+      "settings": {
+        "accessibility_info": "Slideshow about our brand"
+      }
     }
   },
   "order": [
@@ -240,6 +264,7 @@
     "1661417045f6f50ce4",
     "1661417065fcb0b62c",
     "166195130700912ba1",
-    "1662554655221365cd"
+    "1662554655221365cd",
+    "16633197192e1d5525"
   ]
 }

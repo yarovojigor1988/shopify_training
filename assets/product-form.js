@@ -16,6 +16,7 @@ if (!customElements.get('product-form')) {
       if (this.submitButton.getAttribute('aria-disabled') === 'true') return;
 
       this.handleErrorMessage();
+      this.handleGiftErrorMessage();
 
       if (document.getElementById('add-gift-option')) {
         const giftOption = document.querySelector('#add-gift-option');
@@ -39,7 +40,9 @@ if (!customElements.get('product-form')) {
           if(!constraint.test(giftMessageInput.value.trim()) || giftMessageInput.value.trim().length === 0) {
             this.handleGiftErrorMessage('Please input valid gift message');
             return
-          } 
+          } else {
+            this.handleGiftErrorMessage();
+          }
 
           if (emailDelivery) {
             const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -55,6 +58,27 @@ if (!customElements.get('product-form')) {
             el.name = 'properties[_Delivery]';
           });
           giftEmailInput.name = 'properties[_Email to message]';
+        }
+      }
+
+      if (document.getElementById('add-engraving-option')) {
+
+        const engravingOption = document.querySelector('#add-engraving-option');
+        const engravingMessage = document.querySelector('.custom-engraving-message');
+        const engravingMessageInput = document.getElementById('engraving-message');
+        const addengravingHidden = document.getElementById('add-engraving-hiden');
+
+        if (engravingOption.checked) {
+          const patternstr = '^[A-Za-z0-9., \n]{0,50}$';
+          let constraint = new RegExp(patternstr);
+          if(!constraint.test(engravingMessageInput.value.trim()) || engravingMessageInput.value.trim().length === 0) {
+            this.handleGiftErrorMessage('Please input valid engraving message');
+            return
+          } else {
+            this.handleGiftErrorMessage();
+          }
+        } else {
+          engravingMessageInput.name = 'properties[_Gift message]';
         }
       }
 
@@ -125,6 +149,11 @@ if (!customElements.get('product-form')) {
               el.name = 'properties[Delivery]';
             });
             giftEmailInput.name = 'properties[Email to message]';
+          }
+
+          if (document.getElementById('add-engraving-option')) {
+            const engravingMessageInput = document.getElementById('engraving-message');
+            engravingMessageInput.name = 'properties[Add engraving?]';
           }
 
         });

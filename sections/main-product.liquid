@@ -339,6 +339,8 @@
                 <variant-radios class="no-js-hidden" data-section="{{ section.id }}" data-url="{{ product.url }}" {{ block.shopify_attributes }}>
                   {%- for option in product.options_with_values -%}
                       <fieldset class="js product-form__input">
+
+                        {%- if option.name != 'Engraving length' and template.suffix == 'engraving-product' -%}
                         <legend class="form__label">{{ option.name }}</legend>
                         {%- for value in option.values -%}
                           <input type="radio" id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
@@ -351,6 +353,7 @@
                             {{ value }}
                           </label>
                         {%- endfor -%}
+                      {%- endif -%}
                       </fieldset>
                   {%- endfor -%}
                   <script type="application/json">
@@ -448,6 +451,24 @@
                   </p>
                 {% endif %}
 
+                {% if template.suffix == 'engraving-product' %}
+
+                  <p class="line-item-property__field custom-gift-checkbox">
+                    <input type="hidden" id="add-engraving-hiden" name="properties[Add engraving?]" value="No">
+                    <input id="add-engraving-option" type="checkbox" name="properties[Add engraving?]" value="Yes">
+                    <label for="add-engraving-option">Add engraving?</label>
+                  </p>
+                  <engraving-message class="no-js-hidden" data-section="{{ section.id }}" data-url="{{ product.url }}">
+                    <p class="custom-engraving-input custom-engraving-message">
+                      <label for="engraving-message">Engraving</label>
+                      <input id="engraving-message" type="text" name="properties[Engraving message]">
+                    </p>
+                    <script type="application/json">
+                      {{ product.variants | json }}
+                    </script>
+                  </engraving-message>
+                {% endif %}
+
                 <div class="gift-product-form__error-message-wrapper" role="alert" hidden>
                   <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-error" viewBox="0 0 13 13">
                     <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
@@ -479,7 +500,7 @@
                           </svg>
                         </div>
                     </button>
-                    {%- if block.settings.show_dynamic_checkout and template.suffix != 'gift-option' -%}
+                    {%- if block.settings.show_dynamic_checkout and template.suffix != 'gift-option' and template.suffix != 'engraving-product' -%}
                       {{ form | payment_button }}
                     {%- endif -%}
                   </div>
@@ -655,6 +676,25 @@
           }
         })
       })
+    }
+
+    if (document.getElementById('add-engraving-option')) {
+      const engravingOption = document.querySelector('#add-engraving-option');
+      const engravingMessage = document.querySelector('.custom-engraving-message');
+      const engravingMessageInput = document.getElementById('engraving-message');
+      const addengravingHidden = document.getElementById('add-engraving-hiden');
+
+      engravingOption.addEventListener('change', ()=>{
+        if (engravingOption.checked) {
+          engravingMessage.classList.add('custom-option-show');
+          addengravingHidden.name = "properties[_Add engraving?]";
+
+        } else {
+          engravingMessage.classList.remove('custom-option-show');
+          addengravingHidden.name = "properties[Add engraving?]";
+        }
+      });
+      
     }
   </script>
 

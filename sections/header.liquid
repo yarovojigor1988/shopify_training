@@ -79,7 +79,8 @@
   }
 
   .welcome-new-user-active{
-    display: block;
+    display: flex;
+    align-items: center;
   }
 
 
@@ -438,7 +439,7 @@
 
       {%- liquid
         for order in customer.orders
-          if order.fulfillment_status_label == 'Unfulfilled'
+          if order.fulfillment_status_label == 'Unfulfilled' and order.financial_status_label != 'Refunded'
             assign orders_count = orders_count | plus: 1
           endif
         endfor 
@@ -450,7 +451,7 @@
     
         <div>You have {{ orders_count }} incomplete orders</div>
 
-        {%- elsif customer.orders_count == 0 -%}
+        {%- elsif customer.orders.length == 0 -%}
         
         <div></div>
 

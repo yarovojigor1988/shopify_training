@@ -2889,6 +2889,8 @@ details-disclosure > details {
 
 .header__orders{
   width: max-content;
+  display: flex;
+  align-items: center;
 }
 
 @media screen and (max-width: 750px) {

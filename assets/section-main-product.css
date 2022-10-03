@@ -1225,3 +1225,25 @@ a.product__text {
   margin-right: 0.7rem;
   margin-top: 0.5rem;
 }
+
+.custom-engraving-input{
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-engraving-input>label{
+  margin-bottom: 5px; 
+}
+
+.custom-engraving-input>input{
+  padding: 5px;
+}
+
+.custom-engraving-message{
+  display: none;
+}
+
+.custom-engraving-message.custom-option-show{
+  display: flex;
+  flex-direction: column;
+}

@@ -469,6 +469,10 @@
                   </engraving-message>
                 {% endif %}
 
+                <p class="line-item-property__field">
+                  <input id="users_browser" type="hidden" name="properties[_Browser]">
+                </p>
+
                 <div class="gift-product-form__error-message-wrapper" role="alert" hidden>
                   <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-error" viewBox="0 0 13 13">
                     <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
@@ -694,7 +698,28 @@
           addengravingHidden.name = "properties[Add engraving?]";
         }
       });
+    }
+
+    if (document.getElementById('users_browser')) {
       
+      let userAgent = navigator.userAgent;
+      let browserName;
+      
+      if(userAgent.match(/chrome|chromium|crios/i)){
+        browserName = "chrome";
+      }else if(userAgent.match(/firefox|fxios/i)){
+        browserName = "firefox";
+      }  else if(userAgent.match(/safari/i)){
+        browserName = "safari";
+      }else if(userAgent.match(/opr\//i)){
+        browserName = "opera";
+      } else if(userAgent.match(/edg/i)){
+        browserName = "edge";
+      }else{
+        browserName="No browser detection";
+      }
+  
+      document.getElementById('users_browser').value = browserName;
     }
   </script>
 

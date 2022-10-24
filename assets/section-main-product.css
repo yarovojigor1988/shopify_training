@@ -1183,3 +1183,67 @@ a.product__text {
   margin-left: 1.2rem;
   flex-shrink: 0;
 }
+
+.custom-gift-input.custom-option-show{
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-gift-input{
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-gift-input>label{
+  margin-bottom: 5px; 
+}
+
+.custom-gift-input>input{
+  padding: 5px;
+}
+
+.custom-gift-message{
+  display: none;
+}
+
+.custom-gift-email{
+  display: none;
+}
+
+.custom-gift-delivery{
+  display: none;
+}
+
+.custom-option-show{
+  display: block;
+}
+
+.gift-product-form__error-message-wrapper svg{
+  flex-shrink: 0;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-right: 0.7rem;
+  margin-top: 0.5rem;
+}
+
+.custom-engraving-input{
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-engraving-input>label{
+  margin-bottom: 5px; 
+}
+
+.custom-engraving-input>input{
+  padding: 5px;
+}
+
+.custom-engraving-message{
+  display: none;
+}
+
+.custom-engraving-message.custom-option-show{
+  display: flex;
+  flex-direction: column;
+}

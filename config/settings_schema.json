@@ -87,6 +87,47 @@
     ]
   },
   {
+    "name": "Welcome user",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Welcome new customer"
+      },
+      {
+        "type": "color",
+        "id": "colors_welcome_bg",
+        "default": "#F3F3F3",
+        "label": "Welcome background color",
+        "info": "Welcome background color"
+      },      
+      {
+        "type": "color",
+        "id": "colors_welcome_text_color",
+        "default": "#121212",
+        "label": "Welcome text color",
+        "info": "Welcome text color"
+      },
+      {
+        "type": "text",
+        "id": "welcome_text_desktop",
+        "label": "Welcome text desktop",
+        "info": "Welcome text desktop"
+      },
+      {
+        "type": "text",
+        "id": "welcome_text_mobile",
+        "label": "Welcome text mobile",
+        "info": "Welcome text mobile"
+      },
+      {
+        "type": "image_picker",
+        "id": "welcome_user_img",
+        "label": "Welcome user image",
+        "info": "Welcome user image"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.typography.name",
     "settings": [
       {

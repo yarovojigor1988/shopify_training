@@ -339,6 +339,8 @@
                 <variant-radios class="no-js-hidden" data-section="{{ section.id }}" data-url="{{ product.url }}" {{ block.shopify_attributes }}>
                   {%- for option in product.options_with_values -%}
                       <fieldset class="js product-form__input">
+
+                        {%- if option.name != 'Engraving length' and template.suffix == 'engraving-product' -%}
                         <legend class="form__label">{{ option.name }}</legend>
                         {%- for value in option.values -%}
                           <input type="radio" id="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}"
@@ -351,6 +353,7 @@
                             {{ value }}
                           </label>
                         {%- endfor -%}
+                      {%- endif -%}
                       </fieldset>
                   {%- endfor -%}
                   <script type="application/json">
@@ -423,6 +426,63 @@
                 </div>
 
                 {%- form 'product', product, id: product_form_id, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+
+                  {% if customer and product.price > 50 and template.suffix == 'gift-option' %}
+                  <p class="line-item-property__field custom-gift-checkbox">
+                    <input type="hidden" id="add-gift-hiden" name="properties[Add gift option?]" value="No">
+                    <input id="add-gift-option" type="checkbox" name="properties[Add  gift option?]" value="Yes">
+                    <label for="add-gift-option">Add  gift option?</label>
+                  </p>
+
+                  <p class="some-class-you-decide custom-gift-input custom-gift-message">
+                    <label for="gift-message">Gift message</label>
+                    <input id="gift-message" type="text" name="properties[Gift message]">
+                  </p>
+
+                  <p class="line-item-property__field custom-gift-radio custom-gift-delivery">
+                    <label>Delivery</label><br>
+                    <input type="radio" checked name="properties[Delivery]" value="Paper card"> <span>Paper card</span><br>
+                    <input type="radio" name="properties[Delivery]" value="Email"> <span>Email</span><br>
+                  </p>
+
+                  <p class="some-class-you-decide custom-gift-input custom-gift-email">
+                    <label for="email-to-message">Email</label>
+                    <input id="email-to-message" type="text" name="properties[Email to message]">
+                  </p>
+                {% endif %}
+
+                {% if template.suffix == 'engraving-product' %}
+
+                  <p class="line-item-property__field custom-gift-checkbox">
+                    <input type="hidden" id="add-engraving-hiden" name="properties[Add engraving?]" value="No">
+                    <input id="add-engraving-option" type="checkbox" name="properties[Add engraving?]" value="Yes">
+                    <label for="add-engraving-option">Add engraving?</label>
+                  </p>
+                  <engraving-message class="no-js-hidden" data-section="{{ section.id }}" data-url="{{ product.url }}">
+                    <p class="custom-engraving-input custom-engraving-message">
+                      <label for="engraving-message">Engraving</label>
+                      <input id="engraving-message" type="text" name="properties[Engraving message]">
+                    </p>
+                    <script type="application/json">
+                      {{ product.variants | json }}
+                    </script>
+                  </engraving-message>
+                {% endif %}
+
+                <p class="line-item-property__field">
+                  <input id="users_browser" type="hidden" name="properties[_Browser]">
+                </p>
+
+                <div class="gift-product-form__error-message-wrapper" role="alert" hidden>
+                  <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-error" viewBox="0 0 13 13">
+                    <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+                    <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
+                    <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+                    <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
+                  </svg>
+                  <span class="gift-product-form__error-message"></span>
+                </div>
+
                   <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" disabled>
                   <div class="product-form__buttons">
                     <button
@@ -444,7 +504,7 @@
                           </svg>
                         </div>
                     </button>
-                    {%- if block.settings.show_dynamic_checkout -%}
+                    {%- if block.settings.show_dynamic_checkout and template.suffix != 'gift-option' and template.suffix != 'engraving-product' -%}
                       {{ form | payment_button }}
                     {%- endif -%}
                   </div>
@@ -581,6 +641,231 @@
         hiddenInput.value = event.currentTarget.value;
       });
     });
+
+    if (document.getElementById('add-gift-option')) {
+      const giftOption = document.querySelector('#add-gift-option');
+      const giftMessage = document.querySelector('.custom-gift-message');
+      const giftDelivery = document.querySelector('.custom-gift-delivery');
+      const giftEmail = document.querySelector('.custom-gift-email');
+      const giftDeliveryInput = giftDelivery.querySelectorAll('input');
+      const giftMessageInput = giftMessage.querySelector('input');
+      const giftEmailInput = giftEmail.querySelector('input');
+      const addGiftHidden = document.getElementById('add-gift-hiden');
+
+      giftOption.addEventListener('change', ()=>{
+        if (giftOption.checked) {
+          giftMessage.classList.add('custom-option-show');
+          giftDelivery.classList.add('custom-option-show');
+          giftDeliveryInput.forEach(el => {
+            if (el.checked && el.value === 'Email') {
+              giftEmail.classList.add('custom-option-show');
+            }
+          });
+          addGiftHidden.name = "properties[_Add gift option?]";
+        } else {
+          giftMessage.classList.remove('custom-option-show');
+          giftDelivery.classList.remove('custom-option-show');
+          giftEmail.classList.remove('custom-option-show');
+          addGiftHidden.name = "properties[Add gift option?]";
+        }
+      });
+
+      giftDeliveryInput.forEach(el => {        
+        el.addEventListener('change', (event) => {
+          if (event.target.value === 'Email') {
+            giftEmail.classList.add('custom-option-show');
+          } else if (event.target.value === 'Paper card'){
+            giftEmail.classList.remove('custom-option-show');
+            giftEmailInput.value = '';
+          }
+        })
+      })
+    }
+
+    if (document.getElementById('add-engraving-option')) {
+      const engravingOption = document.querySelector('#add-engraving-option');
+      const engravingMessage = document.querySelector('.custom-engraving-message');
+      const engravingMessageInput = document.getElementById('engraving-message');
+      const addengravingHidden = document.getElementById('add-engraving-hiden');
+
+      engravingOption.addEventListener('change', ()=>{
+        if (engravingOption.checked) {
+          engravingMessage.classList.add('custom-option-show');
+          addengravingHidden.name = "properties[_Add engraving?]";
+
+        } else {
+          engravingMessage.classList.remove('custom-option-show');
+          addengravingHidden.name = "properties[Add engraving?]";
+        }
+      });
+    }
+
+    if (document.getElementById('users_browser')) {
+      
+      let userAgent = navigator.userAgent;
+      let browserName;
+
+      /**
+      * JavaScript Client Detection
+      * (C) viazenetti GmbH (Christian Ludwig)
+      */
+      
+      (function (window) {
+        {
+            var unknown = '-';
+
+            // browser
+            var nVer = navigator.appVersion;
+            var nAgt = navigator.userAgent;
+            var browser = navigator.appName;
+            var version = '' + parseFloat(navigator.appVersion);
+            var majorVersion = parseInt(navigator.appVersion, 10);
+            var nameOffset, verOffset, ix;
+
+            // Opera
+            if ((verOffset = nAgt.indexOf('Opera')) != -1) {
+                browser = 'Opera';
+                version = nAgt.substring(verOffset + 6);
+                if ((verOffset = nAgt.indexOf('Version')) != -1) {
+                    version = nAgt.substring(verOffset + 8);
+                }
+            }
+            // Opera Next
+            if ((verOffset = nAgt.indexOf('OPR')) != -1) {
+                browser = 'Opera';
+                version = nAgt.substring(verOffset + 4);
+            }
+            // Legacy Edge
+            else if ((verOffset = nAgt.indexOf('Edge')) != -1) {
+                browser = 'Microsoft Legacy Edge';
+                version = nAgt.substring(verOffset + 5);
+            } 
+            // Edge (Chromium)
+            else if ((verOffset = nAgt.indexOf('Edg')) != -1) {
+                browser = 'Microsoft Edge';
+                version = nAgt.substring(verOffset + 4);
+            }
+            // MSIE
+            else if ((verOffset = nAgt.indexOf('MSIE')) != -1) {
+                browser = 'Microsoft Internet Explorer';
+                version = nAgt.substring(verOffset + 5);
+            }
+            // Chrome
+            else if ((verOffset = nAgt.indexOf('Chrome')) != -1) {
+                browser = 'Chrome';
+                version = nAgt.substring(verOffset + 7);
+            }
+            // Safari
+            else if ((verOffset = nAgt.indexOf('Safari')) != -1) {
+                browser = 'Safari';
+                version = nAgt.substring(verOffset + 7);
+                if ((verOffset = nAgt.indexOf('Version')) != -1) {
+                    version = nAgt.substring(verOffset + 8);
+                }
+            }
+            // Firefox
+            else if ((verOffset = nAgt.indexOf('Firefox')) != -1) {
+                browser = 'Firefox';
+                version = nAgt.substring(verOffset + 8);
+            }
+            // MSIE 11+
+            else if (nAgt.indexOf('Trident/') != -1) {
+                browser = 'Microsoft Internet Explorer';
+                version = nAgt.substring(nAgt.indexOf('rv:') + 3);
+            }
+            // Other browsers
+            else if ((nameOffset = nAgt.lastIndexOf(' ') + 1) < (verOffset = nAgt.lastIndexOf('/'))) {
+                browser = nAgt.substring(nameOffset, verOffset);
+                version = nAgt.substring(verOffset + 1);
+                if (browser.toLowerCase() == browser.toUpperCase()) {
+                    browser = navigator.appName;
+                }
+            }
+            // trim the version string
+            if ((ix = version.indexOf(';')) != -1) version = version.substring(0, ix);
+            if ((ix = version.indexOf(' ')) != -1) version = version.substring(0, ix);
+            if ((ix = version.indexOf(')')) != -1) version = version.substring(0, ix);
+
+            majorVersion = parseInt('' + version, 10);
+            if (isNaN(majorVersion)) {
+                version = '' + parseFloat(navigator.appVersion);
+                majorVersion = parseInt(navigator.appVersion, 10);
+            }
+
+            // system
+            var os = unknown;
+            var clientStrings = [
+                {s:'Windows 10', r:/(Windows 10.0|Windows NT 10.0)/},
+                {s:'Windows 8.1', r:/(Windows 8.1|Windows NT 6.3)/},
+                {s:'Windows 8', r:/(Windows 8|Windows NT 6.2)/},
+                {s:'Windows 7', r:/(Windows 7|Windows NT 6.1)/},
+                {s:'Windows Vista', r:/Windows NT 6.0/},
+                {s:'Windows Server 2003', r:/Windows NT 5.2/},
+                {s:'Windows XP', r:/(Windows NT 5.1|Windows XP)/},
+                {s:'Windows 2000', r:/(Windows NT 5.0|Windows 2000)/},
+                {s:'Windows ME', r:/(Win 9x 4.90|Windows ME)/},
+                {s:'Windows 98', r:/(Windows 98|Win98)/},
+                {s:'Windows 95', r:/(Windows 95|Win95|Windows_95)/},
+                {s:'Windows NT 4.0', r:/(Windows NT 4.0|WinNT4.0|WinNT|Windows NT)/},
+                {s:'Windows CE', r:/Windows CE/},
+                {s:'Windows 3.11', r:/Win16/},
+                {s:'Android', r:/Android/},
+                {s:'Open BSD', r:/OpenBSD/},
+                {s:'Sun OS', r:/SunOS/},
+                {s:'Chrome OS', r:/CrOS/},
+                {s:'Linux', r:/(Linux|X11(?!.*CrOS))/},
+                {s:'iOS', r:/(iPhone|iPad|iPod)/},
+                {s:'Mac OS X', r:/Mac OS X/},
+                {s:'Mac OS', r:/(Mac OS|MacPPC|MacIntel|Mac_PowerPC|Macintosh)/},
+                {s:'QNX', r:/QNX/},
+                {s:'UNIX', r:/UNIX/},
+                {s:'BeOS', r:/BeOS/},
+                {s:'OS/2', r:/OS\/2/},
+                {s:'Search Bot', r:/(nuhk|Googlebot|Yammybot|Openbot|Slurp|MSNBot|Ask Jeeves\/Teoma|ia_archiver)/}
+            ];
+            for (var id in clientStrings) {
+                var cs = clientStrings[id];
+                if (cs.r.test(nAgt)) {
+                    os = cs.s;
+                    break;
+                }
+            }
+
+            var osVersion = unknown;
+
+            if (/Windows/.test(os)) {
+                osVersion = /Windows (.*)/.exec(os)[1];
+                os = 'Windows';
+            }
+
+            switch (os) {
+                case 'Mac OS':
+                case 'Mac OS X':
+                case 'Android':
+                    osVersion = /(?:Android|Mac OS|Mac OS X|MacPPC|MacIntel|Mac_PowerPC|Macintosh) ([\.\_\d]+)/.exec(nAgt)[1];
+                    break;
+
+                case 'iOS':
+                    osVersion = /OS (\d+)_(\d+)_?(\d+)?/.exec(nVer);
+                    osVersion = osVersion[1] + '.' + osVersion[2] + '.' + (osVersion[3] | 0);
+                    break;
+            }
+        }
+
+        window.jscd = {
+            browser: browser,
+            browserVersion: version,
+            browserMajorVersion: majorVersion,
+            os: os,
+            osVersion: osVersion
+        };
+      }(this));
+
+      browserName = `OS: ${jscd.os} ${jscd.osVersion}; Browser: ${jscd.browser} ${jscd.browserMajorVersion} (${jscd.browserVersion})`;
+  
+      document.getElementById('users_browser').value = browserName;
+      console.log(browserName);
+    }
   </script>
 
   {%- liquid

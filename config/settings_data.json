@@ -11,6 +11,11 @@
     "gradient_background_1": "",
     "colors_background_2": "#f3f3f3",
     "gradient_background_2": "",
+    "colors_welcome_bg": "#F3F3F3",
+    "colors_welcome_text_color": "#121212",
+    "welcome_text_desktop": "Welcome",
+    "welcome_text_mobile": "Welcome",
+    "welcome_user_img": "shopify:\/\/shop_images\/index111.jpg",
     "type_header_font": "mono",
     "heading_scale": 100,
     "type_body_font": "assistant_n4",
@@ -96,7 +101,7 @@
     "predictive_search_show_vendor": false,
     "predictive_search_show_price": false,
     "currency_code_enabled": true,
-    "cart_type": "notification",
+    "cart_type": "drawer",
     "show_vendor": false,
     "show_cart_note": false,
     "sections": {
@@ -189,6 +194,11 @@
         "type": "main-password-footer",
         "settings": {
           "color_scheme": "background-1"
+        }
+      },
+      "welcome_modal": {
+        "type": "welcome_modal",
+        "settings": {
         }
       }
     },
@@ -297,6 +307,10 @@
       "cart_type": "notification",
       "show_vendor": false,
       "show_cart_note": false,
+      "colors_welcome_bg": "#F3F3F3",
+      "colors_welcome_text_color": "#121212",
+      "welcome_text_desktop": "Welcome",
+      "welcome_text_mobile": "Welcome",
       "sections": {
         "announcement-bar": {
           "type": "announcement-bar",

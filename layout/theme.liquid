@@ -225,6 +225,11 @@
 
     {% section 'announcement-bar' %}
     {% section 'header' %}
+
+    {% if template.name == "index" %}
+      {% section 'welcome_modal.liquid' %}
+    {% endif %}
+    
     <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
       {{ content_for_layout }}
     </main>
@@ -268,5 +273,23 @@
     {%- if settings.predictive_search_enabled -%}
       <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
+
+    <script> 
+    (function() { 
+      var REDIRECT_PATH = '/?new=yes'; 
+    
+      var selector = '#create_customer, form[action$="/account"][method="post"]', 
+          $form = document.querySelectorAll(selector)[0]; 
+    
+      if ($form) { 
+        $redirect = document.createElement('input'); 
+        $redirect.setAttribute('name', 'return_to'); 
+        $redirect.setAttribute('type', 'hidden'); 
+        $redirect.value = REDIRECT_PATH; 
+        $form.appendChild($redirect); 
+      } 
+    })(); 
+  </script>  
+
   </body>
 </html>

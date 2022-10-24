@@ -1,0 +1,273 @@
+{{ 'slick.css' | asset_url | stylesheet_tag }}
+{{ 'slick-theme.css' | asset_url | stylesheet_tag }}
+{{ 'video-section.css' | asset_url | stylesheet_tag }}
+{{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+.slick-track{
+    display: flex !important;
+}
+
+.slick-slider{
+  z-index:0;
+}
+
+.img-video-carousel-holder{
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.img-video-carousel-holder .slick-slide{
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+    z-index: 9;
+    padding-bottom: 0px;
+}
+
+.img-video-carousel-image{
+  width: 100%;
+  height: 100%;
+}
+
+.slick-list{
+    z-index: -1;
+}
+
+.slick-prev{
+    left: 20px;
+    width: 30px;
+    height: 30px;
+}
+
+.slick-next {
+  right: 20px;
+  width: 30px;
+  height: 30px;
+}
+
+.slick-prev::before, .slick-next::before{
+    font-size: 30px;
+    opacity: 1;
+    color: #ff0101;
+}
+
+.img-video-carousel-holder .video-section{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.img-video-carousel-holder .video-section iframe{
+  width: 100%;
+  height: calc(100vw * 0.5625);
+  position: relative;
+}
+
+.custom-carousel-video-button{
+  position: absolute;
+  bottom: 40px;
+  right:20px;
+  padding:10px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  background-color: #343434;
+  color: red;
+  text-decoration: none;
+  border-radius: 5px;
+  z-index:33;
+}
+
+.custom-carousel-video-button:hover{
+  background-color: red;
+  color: #343434;
+}
+
+.custom-carousel-image-link{
+  text-align: center;
+  display: block;
+  padding: 5px 0 10px;
+  color: #b00000;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+{%- endstyle -%}
+<div 
+    class="img-video-carousel-holder"
+    id="customSlider-{{ section.id }}"
+>
+
+  
+    <div id="img-video-carousel-{{ section.id }}" class="img-video-carousel">
+        {%- for block in section.blocks -%}
+          {% if block.settings.slide_type == 'image_slide' %}
+          <div class="custom-img-vid-holder">
+            <img 
+                class="img-video-carousel-image"
+                srcset="{{ block.settings.image | image_url: width: 550 }}"
+                sizes="100vw"
+                src="{{ block.settings.image | image_url: width: 550 }}"
+                loading="lazy"
+                alt="{{ block.settings.image.alt | escape }}"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.width | divided_by: block.settings.image.aspect_ratio | round }}"
+            >
+            <a class="custom-carousel-image-link" href="{{ block.settings.img_slide_link }}" >
+              {{ block.settings.img_slide_text }}
+            </a>
+          </div>
+          {% endif %}
+          {% if block.settings.slide_type == 'video_slide' %}
+          <div class="video-section isolate">  
+            {%- if block.settings.video_url.type == 'youtube' -%}
+              <iframe src="https://www.youtube.com/embed/{{ block.settings.video_url.id }}?enablejsapi=1" class="js-youtube" allow="autoplay; encrypted-media" allowfullscreen title="title"></iframe>
+            {%- else -%}
+              <iframe src="https://player.vimeo.com/video/{{ block.settings.video_url.id }}" class="js-vimeo" allow="autoplay; encrypted-media" allowfullscreen title="title"></iframe>
+            {%- endif -%}
+            {%- if block.settings.video_slide_link -%}
+              <div><a class="custom-carousel-video-button" href="{{ block.settings.video_slide_link }}">{{ block.settings.video_slide_text }}</a></div>
+            {%- endif -%}
+          </div>
+          {% endif %}
+        {%- endfor -%}
+      </div>
+</div>
+
+<script src="{{ 'jquery-3.6.0.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'slick.min.js' | asset_url }}" defer="defer"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      $('#img-video-carousel-{{ section.id }}').slick({
+        autoplay: false,
+        autoplaySpeed: 5000,
+        dots: false,
+        infinite: true,
+        arrows: true,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        responsive: [
+          {
+            breakpoint: 800,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1,
+            },
+          },
+          {
+            breakpoint: 450,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1,
+            },
+          }
+        ]
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Img video carousel",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image video carousel"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Custom slide name",
+      "limit": 15,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Slide type"
+        },
+        {
+          "type": "select",
+          "id": "slide_type",
+          "options": [
+            {
+              "value": "image_slide",
+              "label": "Image slide"
+            },
+            {
+              "value": "video_slide",
+              "label": "Video slide"
+            }
+          ],
+          "default": "image_slide",
+          "label": "Image slide"
+        },
+        {
+          "type": "header",
+          "content": "Image slide"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom slide image"
+        },
+        {
+          "type": "text",
+          "id": "img_slide_text",
+          "label": "Slide text"
+        },
+        {
+          "type": "url",
+          "id": "img_slide_link",
+          "label": "Slide link"
+        },
+        {
+          "type": "header",
+          "content": "Video slide"
+        },
+        {
+          "type": "video_url",
+          "id": "video_url",
+          "accept": [
+            "youtube",
+            "vimeo"
+          ],
+          "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+          "label": "t:sections.video.settings.video_url.label",
+          "placeholder": "t:sections.video.settings.video_url.placeholder",
+          "info": "t:sections.video.settings.video_url.info"
+        },
+        {
+          "type": "text",
+          "id": "video_slide_text",
+          "label": "Video slide button text",
+          "default": "Button"
+        },
+        {
+          "type": "url",
+          "id": "video_slide_link",
+          "label": "Video slide link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Img video carousel",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

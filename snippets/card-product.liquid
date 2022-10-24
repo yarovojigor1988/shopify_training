@@ -91,11 +91,37 @@
               </a>
             </h3>
           </div>
+          {%- liquid 
+            assign today_date2 = 'now' | date: '%s'
+            assign prod_date = card_product.created_at | date: '%s' 
+            assign dateDifference = today_date2 | minus: prod_date
+            if dateDifference < 864000    
+              assign isNewProd = true
+            else
+              assign isNewProd = false
+            endif
+
+            for tag in card_product.tags
+              if tag  contains 'bandage_free-shipping'  
+                assign bandage_free_ship=true
+              elsif tag  contains 'bandage_sold-out'
+                assign bandage_sold-out=true
+              endif 
+            endfor 
+
+          -%}
+
           <div class="card__badge {{ settings.badge_position }}">
             {%- if card_product.available == false -%}
               <span id="NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}" class="badge badge--bottom-left color-{{ settings.sold_out_badge_color_scheme }}">{{ 'products.product.sold_out' | t }}</span>
             {%- elsif card_product.compare_at_price > card_product.price and card_product.available -%}
               <span id="NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}" class="badge badge--bottom-left color-{{ settings.sale_badge_color_scheme }}">{{ 'products.product.on_sale' | t }}</span>
+            {%- elsif bandage_free_ship == true -%}
+              <span id="NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}" class="badge badge--bottom-left color-{{ settings.sale_badge_color_scheme }}">Free shipping</span> 
+            {%- elsif isNewProd == true -%}
+              <span id="NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}" class="badge badge--bottom-left color-{{ settings.sale_badge_color_scheme }}">New</span>
+            {%- elsif bandage_sold-out == true -%}
+            <span id="NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}" class="badge badge--bottom-left color-{{ settings.sale_badge_color_scheme }}">Sold out</span> 
             {%- endif -%}
           </div>
         </div>

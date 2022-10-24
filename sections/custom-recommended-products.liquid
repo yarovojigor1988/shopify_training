@@ -1,0 +1,234 @@
+{{ 'slick.css' | asset_url | stylesheet_tag }}
+{{ 'slick-theme.css' | asset_url | stylesheet_tag }}
+{%- style -%}
+.slick-track{
+    display: flex !important;
+    height: 100%;
+}
+
+.slick-slider{
+  z-index:0;
+}
+
+.custom-sale-carousel-holder .slick-slide{
+    padding-bottom: 0;
+}
+
+.slick-list{
+    z-index: -1;
+}
+
+.slick-prev{
+    left: 20px;
+    width: 30px;
+    height: 30px;
+}
+
+.slick-next {
+  right: 20px;
+  width: 30px;
+  height: 30px;
+}
+
+.slick-prev::before, .slick-next::before{
+    font-size: 30px;
+    opacity: 1;
+    color: #ff0101;
+}
+
+.custom-sale-carousel-holder{
+  margin: 0 10px;
+}
+
+.custom-sale-carousel-holder>.rec-card-wrapper{
+  padding: 0 10px;
+  max-width: 25%;
+}
+
+.custom-sale-carousel-holder>.rec-card-wrapper>a{
+  text-decoration:none;
+}
+
+.custom-card-header>h3{
+  text-align: center;
+  text-decoration: none;
+  color: #000;
+  font-size:16px;
+  font-weight: 600;
+  margin: 5px;
+}
+
+.custom-card-old-price-item{
+  text-decoration: line-through;
+  font-size: 1.6rem;
+  letter-spacing: 0.1rem;
+  color: rgb(var(--color-foreground));
+}
+
+.custom-card-price{
+  display: flex;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.card-image-holder{
+  max-height: 300px;
+  margin: 0 auto; 
+}
+
+.custom-card-image {
+  max-width: 100%;
+  max-height: 300px;
+}
+
+.custom-sale-card{
+  margin: 10px;
+  padding: 10px 0;
+  border-radius: 10px;
+  background-color: #fdfdfd;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+}
+
+.custom-sale-carousel-holder {
+  max-width: 1200px;
+  padding: 0 5rem;
+  margin: 0 auto 50px;
+}
+
+.custom-sale-carousel-holder .slick-slide{
+  height: auto;
+  padding: 20px 0;
+}
+
+.custom-sale-carousel-holder .slick-slide>a{
+  height: 100%;
+  display: block;
+  text-decoration: none;
+}
+
+{%- endstyle -%}
+<div 
+    class="custom-sale-carousel-holder"
+    id="customRecSlider-{{ section.id }}">
+    {%- for block in section.blocks -%}
+
+      <a href="{{ block.settings.product.url }}">
+        <div class="custom-sale-card">
+          <div class="card-image-holder">
+            <img 
+              class="custom-card-image"
+              src="{{ block.settings.product.featured_image | image_url: width: 550 }}"
+              width="550"
+              height="550"
+              loading="lazy"
+            >
+          </div>
+          <div class="card-content">
+            <div class="custom-card-header">
+              <h3 class="card__heading h5">{{ block.settings.product.title }}</h3>
+            </div>
+            <div class="card-information">
+              <div class="price__container">
+                <div class="custom-card-price">
+                  {%- if block.settings.product.compare_at_price > block.settings.product.price -%}
+                  <span class="custom-card-old-price-item">{{ block.settings.product.compare_at_price | money | strip_html }}</span>
+                  {%- endif -%}
+                  <span class="custom-card-price-item">{{ block.settings.product.price | money | strip_html }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+
+    {%- endfor -%}
+</div>
+
+<script src="{{ 'jquery-3.6.0.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'slick.min.js' | asset_url }}" defer="defer"></script>
+<script>
+
+  document.addEventListener('DOMContentLoaded', function() {
+
+  $('#customRecSlider-{{ section.id }}').slick({
+      autoplay: false,
+      autoplaySpeed: 10000,
+      dots: false,
+      infinite: true,
+      arrows: true,
+      slidesToShow: 4,
+      slidesToScroll: 1,
+      responsive: [
+        {
+          breakpoint: 800,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 1,
+          },
+        },
+        {
+          breakpoint: 450,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1,
+          },
+        }
+      ]
+    });
+  });
+
+
+</script>
+
+{% schema %}
+{
+  "name": "Recommended products",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Custom sliders header"
+    },
+    {
+      "type": "text",
+      "id": "accessibility_info",
+      "label": "Slide header",
+      "info": "Slide header",
+      "default": "Slideshow about our brand"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Custom slide name",
+      "limit": 15,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recommended products",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

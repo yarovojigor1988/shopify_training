@@ -25,6 +25,9 @@
   <div class="rte">
     {{ page.content }}
   </div>
+  {%- if template.suffix == 'order-status' -%}
+    {%- render 'react-order-info' -%}
+  {%- endif -%}
 </div>
 
 {% schema %}

@@ -2886,3 +2886,48 @@ details-disclosure > details {
 .font-body-bold {
   font-weight: var(--font-body-weight-bold);
 }
+
+.header__orders{
+  width: max-content;
+  display: flex;
+  align-items: center;
+}
+
+@media screen and (max-width: 750px) {
+  .header__orders{
+    display: none;
+  }
+
+  .header__orders-mobile{
+    width: 100%;
+    min-width: max-content;
+    display: flex;
+    justify-content: center;
+    grid-column-start: 1;
+    grid-column-end: 4;
+  }
+}
+
+
+@media screen and (min-width: 751px) {
+  .header__orders-mobile{
+    display: none;
+  }
+}
+
+.lime-item-row{
+  display: flex;
+}
+
+.lime-item-row .line-item-column{
+  width: 25%;
+  padding: 5px 0px;
+}
+
+.order-status-link{
+  margin-bottom: 30px;
+}
+
+.order-status-link a{
+  font-size: 18px;
+}

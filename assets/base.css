@@ -2914,3 +2914,20 @@ details-disclosure > details {
     display: none;
   }
 }
+
+.lime-item-row{
+  display: flex;
+}
+
+.lime-item-row .line-item-column{
+  width: 25%;
+  padding: 5px 0px;
+}
+
+.order-status-link{
+  margin-bottom: 30px;
+}
+
+.order-status-link a{
+  font-size: 18px;
+}

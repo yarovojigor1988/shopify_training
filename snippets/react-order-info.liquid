@@ -1,0 +1,55 @@
+{% comment %}
+
+Root element for react tool tip
+
+{% endcomment %}
+{% if customer%}
+<div id="react-order-info"></div>
+
+<script>
+
+var ordersArray = [];
+
+{% assign couner = 50 %}
+
+{% paginate customer.orders by couner %}
+    {% for order in customer.orders %}
+        var orderObj = {};
+        orderObj.billing_address = {};
+        orderObj.line_items = [];
+
+
+        orderObj.id = "{{ order.id }}"
+        orderObj.customerId = "{{ customer.id }}"
+        orderObj.order_number= "{{ order.order_number }}"
+        orderObj.status = "{{ order.financial_status_label }}"
+        orderObj.billing_address.first_name = "{{ order.billing_address.first_name }}"
+        orderObj.billing_address.last_name = "{{ order.billing_address.last_name }}"
+        orderObj.billing_address.country = "{{ order.billing_address.country }}"
+        orderObj.billing_address.province = "{{ order.billing_address.province }}"
+        orderObj.billing_address.city = "{{ order.billing_address.city }}"
+        orderObj.billing_address.address1 = "{{ order.billing_address.address1 }}"
+
+        {% for line_item in order.line_items %}
+            var orderLineItem = {}
+            
+            orderLineItem.quantity = "{{ line_item.quantity }}"
+            orderLineItem.name = "{{ line_item.product.title }}"
+            orderLineItem.sku = "{{ line_item.sku }}"
+            orderLineItem.price = "{{ line_item.final_price | money }}"
+            orderObj.line_items.push(orderLineItem);
+        {% endfor %}
+
+        orderObj.total_discounts = "{{ order.total_discounts | money }}"
+        orderObj.total_price = "{{ order.subtotal_price | money }}"
+        
+        ordersArray.push(orderObj);
+    {% endfor %}
+{% endpaginate %}
+{% else %}
+
+<h3>Please login</h3>
+
+{% endif %}
+
+</script>
